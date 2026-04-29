@@ -128,7 +128,10 @@ export default function Dashboard() {
                       className="bg-white dark:bg-gray-950 hover:bg-gray-50 dark:hover:bg-gray-900/40 cursor-pointer transition-colors"
                       onClick={() => setSelectedSymbol(h.symbol)}
                     >
-                      <td className="px-4 py-2.5 font-semibold">{h.symbol}</td>
+                      <td className="px-4 py-2.5 font-semibold">
+                        <div>{h.name || h.symbol}</div>
+                        <div className="text-xs font-normal text-gray-400 dark:text-gray-500">{h.symbol}</div>
+                      </td>
                       <td className="px-4 py-2.5 tabular-nums">{h.shares}</td>
                       <td className="px-4 py-2.5 tabular-nums">{formatMoney(h.symbol, h.avgCost)}</td>
                       <td className="px-4 py-2.5 tabular-nums font-medium">{formatMoney(h.symbol, price)}</td>

@@ -102,7 +102,7 @@ export default function Portfolio() {
           <table className="w-full text-sm">
             <thead className="bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400">
               <tr>
-                {['심볼', '회사명', '수량', '평균단가', '현재가', '평가금액', '손익', ''].map((h) => (
+                {['종목', '수량', '평균단가', '현재가', '평가금액', '손익', ''].map((h) => (
                   <th key={h} className="px-4 py-2 text-left font-medium whitespace-nowrap">{h}</th>
                 ))}
               </tr>
@@ -115,8 +115,10 @@ export default function Portfolio() {
                 const pnlPct = ((price - h.avgCost) / h.avgCost) * 100
                 return (
                   <tr key={h.symbol} className="bg-white dark:bg-gray-950 hover:bg-gray-50 dark:hover:bg-gray-900/50">
-                    <td className="px-4 py-2 font-semibold whitespace-nowrap">{h.symbol}</td>
-                    <td className="px-4 py-2 text-gray-600 dark:text-gray-400">{h.name}</td>
+                    <td className="px-4 py-2 font-semibold whitespace-nowrap">
+                      <div>{h.name || h.symbol}</div>
+                      <div className="text-xs font-normal text-gray-400 dark:text-gray-500">{h.symbol}</div>
+                    </td>
                     <td className="px-4 py-2 tabular-nums">{h.shares.toLocaleString('ko-KR')}</td>
                     <td className="px-4 py-2 tabular-nums whitespace-nowrap">{formatMoney(h.symbol, h.avgCost)}</td>
                     <td className="px-4 py-2 tabular-nums whitespace-nowrap">{formatMoney(h.symbol, price)}</td>
