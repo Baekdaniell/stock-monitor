@@ -7,6 +7,25 @@ import type { StockResult } from '../components/SymbolSearch'
 
 const EMPTY_FORM: Holding = { symbol: '', name: '', shares: 0, avgCost: 0 }
 
+function isKrw(symbol: string) {
+  return /\.(KS|KQ)$/.test(symbol)
+}
+
+function formatMoney(symbol: string, amount: number): string {
+  if (isKrw(symbol)) {
+    return `₩${Math.round(amount).toLocaleString('ko-KR')}`
+  }
+  return `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+}
+
+function formatPnl(symbol: string, pnl: number, pct: number): string {
+  const sign = pnl >= 0 ? '+' : ''
+  const money = isKrw(symbol)
+    ? `${sign}₩${Math.round(Math.abs(pnl)).toLocaleString('ko-KR')}${pnl < 0 ? '' : ''}`
+    : `${sign}$${Math.abs(pnl).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  return `${pnl < 0 ? '-' : '+'}${money.replace(/^[+-]/, '')} (${sign}${pct.toFixed(1)}%)`
+}
+
 export default function Portfolio() {
   const holdings = useStore((s) => s.holdings)
   const addHolding = useStore((s) => s.addHolding)
@@ -32,6 +51,11 @@ export default function Portfolio() {
     setShowForm(false)
   }
 
+  const currencyLabel = form.symbol ? (isKrw(form.symbol) ? '₩' : '$') : '₩/$'
+  const avgCostPlaceholder = form.symbol
+    ? (isKrw(form.symbol) ? '70,000' : '150.00')
+    : '금액 입력'
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -52,31 +76,32 @@ export default function Portfolio() {
             <span className="text-xs text-gray-500">종목 검색</span>
             <SymbolSearch
               onSelect={handleSelectStock}
-              placeholder="종목명 또는 티커 검색 (예: Apple, AAPL)"
+              placeholder="종목명 또는 티커 검색 (예: 삼성전자, AAPL)"
             />
           </div>
 
           {/* 수량 / 평균단가 */}
           <div className="grid grid-cols-2 gap-3">
-            {(
-              [
-                { key: 'shares', label: '수량', placeholder: '10' },
-                { key: 'avgCost', label: '평균단가 ($)', placeholder: '150.00' },
-              ] as const
-            ).map(({ key, label, placeholder }) => (
-              <label key={key} className="flex flex-col gap-1">
-                <span className="text-xs text-gray-500">{label}</span>
-                <input
-                  type="number"
-                  placeholder={placeholder}
-                  value={form[key] === 0 ? '' : form[key]}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, [key]: Number(e.target.value) }))
-                  }
-                  className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </label>
-            ))}
+            <label className="flex flex-col gap-1">
+              <span className="text-xs text-gray-500">수량 (주)</span>
+              <input
+                type="number"
+                placeholder="10"
+                value={form.shares === 0 ? '' : form.shares}
+                onChange={(e) => setForm((f) => ({ ...f, shares: Number(e.target.value) }))}
+                className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </label>
+            <label className="flex flex-col gap-1">
+              <span className="text-xs text-gray-500">평균단가 ({currencyLabel})</span>
+              <input
+                type="number"
+                placeholder={avgCostPlaceholder}
+                value={form.avgCost === 0 ? '' : form.avgCost}
+                onChange={(e) => setForm((f) => ({ ...f, avgCost: Number(e.target.value) }))}
+                className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </label>
           </div>
 
           <div className="flex gap-2 justify-end">
@@ -105,7 +130,7 @@ export default function Portfolio() {
             <thead className="bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400">
               <tr>
                 {['심볼', '회사명', '수량', '평균단가', '현재가', '평가금액', '손익', ''].map((h) => (
-                  <th key={h} className="px-4 py-2 text-left font-medium">{h}</th>
+                  <th key={h} className="px-4 py-2 text-left font-medium whitespace-nowrap">{h}</th>
                 ))}
               </tr>
             </thead>
@@ -117,15 +142,14 @@ export default function Portfolio() {
                 const pnlPct = ((price - h.avgCost) / h.avgCost) * 100
                 return (
                   <tr key={h.symbol} className="bg-white dark:bg-gray-950 hover:bg-gray-50 dark:hover:bg-gray-900/50">
-                    <td className="px-4 py-2 font-semibold">{h.symbol}</td>
+                    <td className="px-4 py-2 font-semibold whitespace-nowrap">{h.symbol}</td>
                     <td className="px-4 py-2 text-gray-600 dark:text-gray-400">{h.name}</td>
-                    <td className="px-4 py-2">{h.shares}</td>
-                    <td className="px-4 py-2">${h.avgCost.toFixed(2)}</td>
-                    <td className="px-4 py-2">${price.toFixed(2)}</td>
-                    <td className="px-4 py-2">${value.toFixed(2)}</td>
-                    <td className={`px-4 py-2 font-medium ${pnl >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`}>
-                      {pnl >= 0 ? '+' : ''}${pnl.toFixed(2)}
-                      <span className="ml-1 text-xs">({pnlPct >= 0 ? '+' : ''}{pnlPct.toFixed(1)}%)</span>
+                    <td className="px-4 py-2 tabular-nums">{h.shares.toLocaleString('ko-KR')}</td>
+                    <td className="px-4 py-2 tabular-nums whitespace-nowrap">{formatMoney(h.symbol, h.avgCost)}</td>
+                    <td className="px-4 py-2 tabular-nums whitespace-nowrap">{formatMoney(h.symbol, price)}</td>
+                    <td className="px-4 py-2 tabular-nums whitespace-nowrap">{formatMoney(h.symbol, value)}</td>
+                    <td className={`px-4 py-2 font-medium whitespace-nowrap tabular-nums ${pnl >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`}>
+                      {formatPnl(h.symbol, pnl, pnlPct)}
                     </td>
                     <td className="px-4 py-2">
                       <button onClick={() => removeHolding(h.symbol)} className="text-gray-400 hover:text-red-500 transition-colors">

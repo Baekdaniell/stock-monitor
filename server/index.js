@@ -60,6 +60,27 @@ app.get('/api/search', async (req, res) => {
   }
 })
 
+// ── GET /api/news-yf?q=AAPL ───────────────────────────────────────────────
+app.get('/api/news-yf', async (req, res) => {
+  const { q } = req.query
+  if (!q) return res.status(400).json({ error: 'q is required' })
+
+  const url =
+    `https://query1.finance.yahoo.com/v1/finance/search` +
+    `?q=${encodeURIComponent(q)}&newsCount=20&quotesCount=0&listsCount=0`
+
+  try {
+    const upstream = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0' },
+    })
+    const body = await upstream.text()
+    res.status(upstream.status).type('application/json').send(body)
+  } catch (err) {
+    console.error('[news-yf]', err)
+    res.status(502).json({ error: 'upstream fetch failed' })
+  }
+})
+
 // ── GET /api/news?q=...&sortBy=...&pageSize=...&language=... ───────────────
 app.get('/api/news', async (req, res) => {
   if (!NEWS_API_KEY) return res.status(503).json({ error: 'NEWS_API_KEY not configured' })
