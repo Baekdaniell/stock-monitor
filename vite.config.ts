@@ -6,11 +6,11 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api/finance': {
+      '/api/yahoo': {
         target: 'https://query1.finance.yahoo.com',
         changeOrigin: true,
         secure: true,
-        rewrite: (path) => path.replace(/^\/api\/finance/, ''),
+        rewrite: (path) => path.replace(/^\/api\/yahoo/, ''),
         configure: (proxy) => {
           proxy.on('proxyReq', (proxyReq) => {
             proxyReq.setHeader(

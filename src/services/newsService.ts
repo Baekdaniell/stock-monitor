@@ -96,11 +96,29 @@ class NewsService {
     }
   }
 
-  async refreshAll(): Promise<void> {
+  private buildNewsUrl(q: string): string {
+    const base = import.meta.env.VITE_API_BASE_URL as string | undefined
+    const params = new URLSearchParams({ q, sortBy: 'publishedAt', pageSize: '30', language: 'en' })
+
+    if (base) {
+      // 프로덕션: 백엔드가 API 키를 주입
+      return `${base}/api/news?${params}`
+    }
+
+    // 개발: Vite 프록시 경유, 클라이언트 키 포함
     const apiKey =
       localStorage.getItem('newsapi_key') ||
-      (import.meta.env.VITE_NEWSAPI_KEY as string | undefined)
-    if (!apiKey) {
+      (import.meta.env.VITE_NEWSAPI_KEY as string | undefined) ||
+      ''
+    params.set('apiKey', apiKey)
+    return `/api/news/v2/everything?${params}`
+  }
+
+  async refreshAll(): Promise<void> {
+    const base   = import.meta.env.VITE_API_BASE_URL as string | undefined
+    const apiKey = localStorage.getItem('newsapi_key') || (import.meta.env.VITE_NEWSAPI_KEY as string | undefined)
+
+    if (!base && !apiKey) {
       console.warn('[NewsService] NewsAPI 키가 설정되지 않았습니다. 설정 페이지에서 입력해주세요.')
       return
     }
@@ -115,15 +133,7 @@ class NewsService {
     useStore.getState().setNewsLoading(true)
 
     try {
-      const params = new URLSearchParams({
-        q: allSymbols.join(' OR '),
-        sortBy: 'publishedAt',
-        pageSize: '30',
-        language: 'en',
-        apiKey,
-      })
-
-      const res = await fetchWithRetry(`/api/news/v2/everything?${params.toString()}`)
+      const res = await fetchWithRetry(this.buildNewsUrl(allSymbols.join(' OR ')))
       if (!res.ok) throw new Error(`NewsAPI HTTP ${res.status}`)
 
       const json = await res.json() as NewsAPIResponse

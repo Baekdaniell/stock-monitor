@@ -57,14 +57,25 @@ class PriceService {
     return [...set]
   }
 
+  /** 환경에 맞는 캔들 URL 생성 */
+  private buildCandleUrl(symbol: string, interval: string, range: string): string {
+    const base = import.meta.env.VITE_API_BASE_URL as string | undefined
+    if (base) {
+      const p = new URLSearchParams({ ticker: symbol, interval, range })
+      return `${base}/api/price?${p}`
+    }
+    return `/api/yahoo/v8/finance/chart/${encodeURIComponent(symbol)}?interval=${interval}&range=${range}`
+  }
+
   /** 단일 심볼의 특정 인터벌 캔들 패치 */
   private async fetchCandles(
     symbol: string,
     interval: CandleInterval,
-    query: string,
+    yfInterval: string,
+    yfRange: string,
   ): Promise<void> {
-    const url = `/api/finance/v8/finance/chart/${encodeURIComponent(symbol)}?${query}`
-    const res = await fetchWithRetry(url)
+    const url = this.buildCandleUrl(symbol, yfInterval, yfRange)
+    const res  = await fetchWithRetry(url)
     if (!res.ok) throw new Error(`HTTP ${res.status} for ${symbol}`)
 
     const json = await res.json() as { chart: { result?: YFResult[]; error?: unknown } }
@@ -103,8 +114,8 @@ class PriceService {
   async fetchSymbol(symbol: string): Promise<void> {
     try {
       await Promise.all([
-        this.fetchCandles(symbol, 'intraday', 'interval=1h&range=5d'),
-        this.fetchCandles(symbol, 'daily',    'interval=1d&range=3mo'),
+        this.fetchCandles(symbol, 'intraday', '1h', '5d'),
+        this.fetchCandles(symbol, 'daily',    '1d', '3mo'),
       ])
     } catch (err) {
       console.warn(`[PriceService] ${symbol} 패치 실패:`, err)

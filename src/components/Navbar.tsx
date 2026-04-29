@@ -12,9 +12,11 @@ import {
   Menu,
   X,
   Clock,
+  LogOut,
 } from 'lucide-react'
 import { useDarkMode } from '../hooks/useDarkMode'
 import { useStore } from '../store'
+import { supabase } from '../lib/supabase'
 
 const navItems = [
   { to: '/', label: '대시보드', icon: TrendingUp, end: true },
@@ -52,8 +54,14 @@ function navLinkClass(isActive: boolean, mobile = false) {
 export default function Navbar() {
   const { dark, toggle } = useDarkMode()
   const lastUpdatedAt = useStore((s) => s.lastUpdatedAt)
+  const userEmail     = useStore((s) => s.userEmail)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const drawerRef = useRef<HTMLDivElement>(null)
+
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    // App.tsx onAuthStateChange 가 clearUserData 처리
+  }
 
   // 드로어 외부 클릭 시 닫기
   useEffect(() => {
@@ -114,6 +122,26 @@ export default function Navbar() {
               <span className="text-gray-300 dark:text-gray-700">갱신</span>
             </div>
 
+            {/* 로그인 사용자 이메일 + 로그아웃 (sm 이상) */}
+            {userEmail && (
+              <div className="hidden sm:flex items-center gap-1.5">
+                <span
+                  title={userEmail}
+                  className="max-w-[140px] truncate text-xs text-gray-500 dark:text-gray-400 select-none"
+                >
+                  {userEmail}
+                </span>
+                <button
+                  onClick={handleLogout}
+                  aria-label="로그아웃"
+                  title="로그아웃"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors"
+                >
+                  <LogOut size={15} />
+                </button>
+              </div>
+            )}
+
             {/* 다크모드 토글 */}
             <button
               onClick={toggle}
@@ -166,13 +194,26 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* 드로어 하단 — 마지막 갱신 시각 */}
-        <div className="border-t border-gray-100 dark:border-gray-800 px-4 py-3 flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500">
-          <Clock size={13} />
-          <span className="font-mono tabular-nums">
-            {lastUpdatedAt ? formatTime(lastUpdatedAt) : '미갱신'}
-          </span>
-          <span>갱신</span>
+        {/* 드로어 하단 — 사용자 정보 + 갱신 시각 */}
+        <div className="border-t border-gray-100 dark:border-gray-800 px-4 py-3 space-y-2">
+          {userEmail && (
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[160px]">{userEmail}</span>
+              <button
+                onClick={() => { setDrawerOpen(false); void handleLogout() }}
+                className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-red-500 transition-colors"
+              >
+                <LogOut size={13} />로그아웃
+              </button>
+            </div>
+          )}
+          <div className="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500">
+            <Clock size={13} />
+            <span className="font-mono tabular-nums">
+              {lastUpdatedAt ? formatTime(lastUpdatedAt) : '미갱신'}
+            </span>
+            <span>갱신</span>
+          </div>
         </div>
       </div>
     </>
