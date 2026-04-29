@@ -62,7 +62,7 @@ function AppRoutes() {
 // ── App 루트 — Supabase Auth 리스너 ──────────────────────────────────────────
 export default function App() {
   useEffect(() => {
-    const { setUser, setAuthReady, loadUserData, clearUserData } = useStore.getState()
+    const { setUser, setAuthReady, loadUserData } = useStore.getState()
 
     // 최초 세션 확인
     supabase.auth.getSession().then(({ data: { session } }) => {
