@@ -143,7 +143,7 @@ function AddForm({ onClose }: { onClose: () => void }) {
       <div className="flex flex-wrap items-center gap-2">
         <SymbolSearch
           onSelect={handleSelect}
-          placeholder="종목명 또는 티커 검색 (예: Apple, AAPL)"
+          placeholder="종목명 또는 티커 검색 (예: 삼성전자, AAPL)"
           className="flex-1 min-w-52"
         />
         <button
