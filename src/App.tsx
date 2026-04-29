@@ -11,7 +11,7 @@ import { ErrorBoundary } from './components/ErrorBoundary'
 import { Skeleton } from './components/Skeleton'
 import { usePriceService } from './hooks/usePriceService'
 import { useNewsService } from './hooks/useNewsService'
-import { supabase } from './lib/supabase'
+import { isSupabaseConfigured, supabase } from './lib/supabase'
 import { useStore } from './store'
 
 // ── 인증 완료 전 전체 화면 로딩 ───────────────────────────────────────────────
@@ -63,6 +63,11 @@ function AppRoutes() {
 export default function App() {
   useEffect(() => {
     const { setUser, setAuthReady, loadUserData } = useStore.getState()
+
+    if (!isSupabaseConfigured) {
+      setAuthReady(true)
+      return
+    }
 
     // 최초 세션 확인
     supabase.auth.getSession().then(({ data: { session } }) => {
