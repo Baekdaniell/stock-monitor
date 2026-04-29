@@ -10,8 +10,10 @@ const app = express()
 
 app.use(cors({
   origin: (origin, cb) => {
-    // allow non-browser requests (curl, server-to-server) and whitelisted origins
-    if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true)
+    // allow non-browser requests, whitelisted origins, and Cloudtype preview domains
+    if (!origin) return cb(null, true)
+    if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true)
+    if (/\.cloudtype\.app$/.test(origin)) return cb(null, true)
     cb(new Error(`CORS: origin "${origin}" not allowed`))
   },
 }))
