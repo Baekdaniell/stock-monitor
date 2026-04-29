@@ -13,17 +13,18 @@ function isKrw(symbol: string) {
 
 function formatMoney(symbol: string, amount: number): string {
   if (isKrw(symbol)) {
-    return `₩${Math.round(amount).toLocaleString('ko-KR')}`
+    return `${Math.round(amount).toLocaleString('ko-KR')}원`
   }
-  return `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+  return `$${Math.round(amount).toLocaleString('en-US')}`
 }
 
 function formatPnl(symbol: string, pnl: number, pct: number): string {
-  const sign = pnl >= 0 ? '+' : ''
+  const sign = pnl >= 0 ? '+' : '-'
+  const abs = Math.abs(pnl)
   const money = isKrw(symbol)
-    ? `${sign}₩${Math.round(Math.abs(pnl)).toLocaleString('ko-KR')}${pnl < 0 ? '' : ''}`
-    : `${sign}$${Math.abs(pnl).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-  return `${pnl < 0 ? '-' : '+'}${money.replace(/^[+-]/, '')} (${sign}${pct.toFixed(1)}%)`
+    ? `${Math.round(abs).toLocaleString('ko-KR')}원`
+    : `$${Math.round(abs).toLocaleString('en-US')}`
+  return `${sign}${money} (${pnl >= 0 ? '+' : ''}${pct.toFixed(1)}%)`
 }
 
 export default function Portfolio() {
