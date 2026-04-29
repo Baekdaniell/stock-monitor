@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { PlusCircle, Trash2, TrendingUp, TrendingDown, X } from 'lucide-react'
 import { useStore } from '../store'
+import { formatMoney, formatChange } from '../lib/format'
 import type { WatchItem } from '../store/types'
 import PriceChart from '../components/PriceChart'
 import { PriceSkeleton } from '../components/Skeleton'
@@ -46,7 +47,7 @@ function WatchlistCard({ item, onRemove }: { item: WatchItem; onRemove: () => vo
           {price ? (
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               <span className="text-xl font-semibold tabular-nums">
-                ${price.price.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                {formatMoney(item.symbol, price.price)}
               </span>
               <span className={[
                 'flex items-center gap-0.5 text-sm font-medium tabular-nums',
@@ -55,7 +56,7 @@ function WatchlistCard({ item, onRemove }: { item: WatchItem; onRemove: () => vo
                 {isUp ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
                 {price.changePercent >= 0 ? '+' : ''}{price.changePercent.toFixed(2)}%
                 <span className="text-xs opacity-75 ml-0.5">
-                  ({price.change >= 0 ? '+' : ''}{price.change.toFixed(2)})
+                  ({formatChange(item.symbol, price.change)})
                 </span>
               </span>
             </div>

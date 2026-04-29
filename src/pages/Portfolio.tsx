@@ -4,28 +4,9 @@ import { useStore } from '../store'
 import type { Holding } from '../store/types'
 import SymbolSearch from '../components/SymbolSearch'
 import type { StockResult } from '../components/SymbolSearch'
+import { isKrw, formatMoney, formatPnl } from '../lib/format'
 
 const EMPTY_FORM: Holding = { symbol: '', name: '', shares: 0, avgCost: 0 }
-
-function isKrw(symbol: string) {
-  return /\.(KS|KQ)$/.test(symbol)
-}
-
-function formatMoney(symbol: string, amount: number): string {
-  if (isKrw(symbol)) {
-    return `${Math.round(amount).toLocaleString('ko-KR')}원`
-  }
-  return `$${Math.round(amount).toLocaleString('en-US')}`
-}
-
-function formatPnl(symbol: string, pnl: number, pct: number): string {
-  const sign = pnl >= 0 ? '+' : '-'
-  const abs = Math.abs(pnl)
-  const money = isKrw(symbol)
-    ? `${Math.round(abs).toLocaleString('ko-KR')}원`
-    : `$${Math.round(abs).toLocaleString('en-US')}`
-  return `${sign}${money} (${pnl >= 0 ? '+' : ''}${pct.toFixed(1)}%)`
-}
 
 export default function Portfolio() {
   const holdings = useStore((s) => s.holdings)
@@ -53,9 +34,7 @@ export default function Portfolio() {
   }
 
   const currencyLabel = form.symbol ? (isKrw(form.symbol) ? '₩' : '$') : '₩/$'
-  const avgCostPlaceholder = form.symbol
-    ? (isKrw(form.symbol) ? '70,000' : '150.00')
-    : '금액 입력'
+  const avgCostPlaceholder = form.symbol ? (isKrw(form.symbol) ? '70,000' : '150') : '금액 입력'
 
   return (
     <div className="space-y-6">
@@ -72,7 +51,6 @@ export default function Portfolio() {
 
       {showForm && (
         <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 space-y-3">
-          {/* 종목 검색 */}
           <div className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">종목 검색</span>
             <SymbolSearch
@@ -81,7 +59,6 @@ export default function Portfolio() {
             />
           </div>
 
-          {/* 수량 / 평균단가 */}
           <div className="grid grid-cols-2 gap-3">
             <label className="flex flex-col gap-1">
               <span className="text-xs text-gray-500">수량 (주)</span>
@@ -106,12 +83,7 @@ export default function Portfolio() {
           </div>
 
           <div className="flex gap-2 justify-end">
-            <button
-              onClick={handleCancel}
-              className="px-3 py-1.5 rounded-lg text-sm text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
-            >
-              취소
-            </button>
+            <button onClick={handleCancel} className="px-3 py-1.5 rounded-lg text-sm text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800">취소</button>
             <button
               onClick={handleAdd}
               disabled={!form.symbol || form.shares <= 0 || form.avgCost <= 0}
@@ -139,7 +111,7 @@ export default function Portfolio() {
               {holdings.map((h) => {
                 const price = prices[h.symbol]?.price ?? h.avgCost
                 const value = price * h.shares
-                const pnl = (price - h.avgCost) * h.shares
+                const pnl   = (price - h.avgCost) * h.shares
                 const pnlPct = ((price - h.avgCost) / h.avgCost) * 100
                 return (
                   <tr key={h.symbol} className="bg-white dark:bg-gray-950 hover:bg-gray-50 dark:hover:bg-gray-900/50">

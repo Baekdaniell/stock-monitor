@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { TrendingUp, TrendingDown } from 'lucide-react'
 import { useStore } from '../store'
 import PriceChart from '../components/PriceChart'
+import { formatMoney, formatTotal, formatChange } from '../lib/format'
 
 export default function Dashboard() {
   const holdings     = useStore((s) => s.holdings)
@@ -37,12 +38,12 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <SummaryCard
           label="포트폴리오 가치"
-          value={`$${totalValue.toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+          value={formatTotal(holdings.map((h) => h.symbol), totalValue)}
         />
         <SummaryCard
           label="총 손익"
-          value={`${totalPnl >= 0 ? '+' : ''}$${Math.abs(totalPnl).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-          sub={`${totalPnlPct >= 0 ? '+' : ''}${totalPnlPct.toFixed(2)}%`}
+          value={`${totalPnl >= 0 ? '+' : '-'}${formatTotal(holdings.map((h) => h.symbol), Math.abs(totalPnl))}`}
+          sub={`${totalPnlPct >= 0 ? '+' : ''}${totalPnlPct.toFixed(1)}%`}
           positive={totalPnl >= 0}
         />
         <SummaryCard
@@ -129,13 +130,13 @@ export default function Dashboard() {
                     >
                       <td className="px-4 py-2.5 font-semibold">{h.symbol}</td>
                       <td className="px-4 py-2.5 tabular-nums">{h.shares}</td>
-                      <td className="px-4 py-2.5 tabular-nums">${h.avgCost.toFixed(2)}</td>
-                      <td className="px-4 py-2.5 tabular-nums font-medium">${price.toFixed(2)}</td>
+                      <td className="px-4 py-2.5 tabular-nums">{formatMoney(h.symbol, h.avgCost)}</td>
+                      <td className="px-4 py-2.5 tabular-nums font-medium">{formatMoney(h.symbol, price)}</td>
                       <td className={`px-4 py-2.5 tabular-nums text-xs font-medium ${up ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500'}`}>
                         {up ? '+' : ''}{pct.toFixed(2)}%
                       </td>
                       <td className={`px-4 py-2.5 tabular-nums font-medium ${pnl >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500'}`}>
-                        {pnl >= 0 ? '+' : ''}${pnl.toFixed(2)}
+                        {formatChange(h.symbol, pnl)}
                       </td>
                     </tr>
                   )
