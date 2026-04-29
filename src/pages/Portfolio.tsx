@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { PlusCircle, Trash2 } from 'lucide-react'
 import { useStore } from '../store'
 import type { Holding } from '../store/types'
+import SymbolSearch from '../components/SymbolSearch'
+import type { StockResult } from '../components/SymbolSearch'
 
-const EMPTY_FORM: Omit<Holding, never> = { symbol: '', name: '', shares: 0, avgCost: 0 }
+const EMPTY_FORM: Holding = { symbol: '', name: '', shares: 0, avgCost: 0 }
 
 export default function Portfolio() {
   const holdings = useStore((s) => s.holdings)
@@ -14,9 +16,18 @@ export default function Portfolio() {
   const [form, setForm] = useState(EMPTY_FORM)
   const [showForm, setShowForm] = useState(false)
 
+  const handleSelectStock = (stock: StockResult) => {
+    setForm((f) => ({ ...f, symbol: stock.symbol, name: stock.name }))
+  }
+
   const handleAdd = () => {
     if (!form.symbol || form.shares <= 0 || form.avgCost <= 0) return
-    addHolding({ ...form, symbol: form.symbol.toUpperCase() })
+    addHolding({ ...form })
+    setForm(EMPTY_FORM)
+    setShowForm(false)
+  }
+
+  const handleCancel = () => {
     setForm(EMPTY_FORM)
     setShowForm(false)
   }
@@ -35,34 +46,53 @@ export default function Portfolio() {
       </div>
 
       {showForm && (
-        <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {(
-            [
-              { key: 'symbol', label: '심볼', type: 'text', placeholder: 'AAPL' },
-              { key: 'name', label: '회사명', type: 'text', placeholder: 'Apple Inc.' },
-              { key: 'shares', label: '수량', type: 'number', placeholder: '10' },
-              { key: 'avgCost', label: '평균단가 ($)', type: 'number', placeholder: '150.00' },
-            ] as const
-          ).map(({ key, label, type, placeholder }) => (
-            <label key={key} className="flex flex-col gap-1">
-              <span className="text-xs text-gray-500">{label}</span>
-              <input
-                type={type}
-                placeholder={placeholder}
-                value={(form as Record<string, string | number>)[key]}
-                onChange={(e) =>
-                  setForm((f) => ({
-                    ...f,
-                    [key]: type === 'number' ? Number(e.target.value) : e.target.value,
-                  }))
-                }
-                className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </label>
-          ))}
-          <div className="col-span-2 sm:col-span-4 flex gap-2 justify-end">
-            <button onClick={() => setShowForm(false)} className="px-3 py-1.5 rounded-lg text-sm text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800">취소</button>
-            <button onClick={handleAdd} className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium">추가</button>
+        <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 space-y-3">
+          {/* 종목 검색 */}
+          <div className="flex flex-col gap-1">
+            <span className="text-xs text-gray-500">종목 검색</span>
+            <SymbolSearch
+              onSelect={handleSelectStock}
+              placeholder="종목명 또는 티커 검색 (예: Apple, AAPL)"
+            />
+          </div>
+
+          {/* 수량 / 평균단가 */}
+          <div className="grid grid-cols-2 gap-3">
+            {(
+              [
+                { key: 'shares', label: '수량', placeholder: '10' },
+                { key: 'avgCost', label: '평균단가 ($)', placeholder: '150.00' },
+              ] as const
+            ).map(({ key, label, placeholder }) => (
+              <label key={key} className="flex flex-col gap-1">
+                <span className="text-xs text-gray-500">{label}</span>
+                <input
+                  type="number"
+                  placeholder={placeholder}
+                  value={form[key] === 0 ? '' : form[key]}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, [key]: Number(e.target.value) }))
+                  }
+                  className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </label>
+            ))}
+          </div>
+
+          <div className="flex gap-2 justify-end">
+            <button
+              onClick={handleCancel}
+              className="px-3 py-1.5 rounded-lg text-sm text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              취소
+            </button>
+            <button
+              onClick={handleAdd}
+              disabled={!form.symbol || form.shares <= 0 || form.avgCost <= 0}
+              className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
+            >
+              추가
+            </button>
           </div>
         </div>
       )}

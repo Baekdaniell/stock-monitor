@@ -1,9 +1,11 @@
-import { useState, useRef, useEffect } from 'react'
-import { PlusCircle, Trash2, TrendingUp, TrendingDown, X, Search } from 'lucide-react'
+import { useState } from 'react'
+import { PlusCircle, Trash2, TrendingUp, TrendingDown, X } from 'lucide-react'
 import { useStore } from '../store'
 import type { WatchItem } from '../store/types'
 import PriceChart from '../components/PriceChart'
 import { PriceSkeleton } from '../components/Skeleton'
+import SymbolSearch from '../components/SymbolSearch'
+import type { StockResult } from '../components/SymbolSearch'
 
 // ── 52주 배지 계산 ──────────────────────────────────────────────────────────────
 type Badge52w = { label: string; type: 'high' | 'low' }
@@ -111,27 +113,22 @@ function Badge52w({ badge }: { badge: Badge52w }) {
 function AddForm({ onClose }: { onClose: () => void }) {
   const addToWatchlist = useStore((s) => s.addToWatchlist)
   const watchlist      = useStore((s) => s.watchlist)
-  const [symbol, setSymbol] = useState('')
-  const [name,   setName]   = useState('')
-  const [error,  setError]  = useState('')
-  const symbolRef = useRef<HTMLInputElement>(null)
+  const [selected, setSelected] = useState<StockResult | null>(null)
+  const [error, setError] = useState('')
 
-  useEffect(() => { symbolRef.current?.focus() }, [])
-
-  const handleAdd = () => {
-    const sym = symbol.trim().toUpperCase()
-    if (!sym) { setError('심볼을 입력해주세요'); return }
-    if (watchlist.some((w) => w.symbol === sym)) {
-      setError(`${sym}은 이미 관심종목에 있습니다`)
-      return
-    }
-    addToWatchlist({ symbol: sym, name: name.trim(), addedAt: new Date().toISOString() })
-    onClose()
+  const handleSelect = (stock: StockResult) => {
+    setSelected(stock)
+    setError('')
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleAdd()
-    if (e.key === 'Escape') onClose()
+  const handleAdd = () => {
+    if (!selected) { setError('종목을 검색하여 선택해주세요'); return }
+    if (watchlist.some((w) => w.symbol === selected.symbol)) {
+      setError(`${selected.symbol}은 이미 관심종목에 있습니다`)
+      return
+    }
+    addToWatchlist({ symbol: selected.symbol, name: selected.name, addedAt: new Date().toISOString() })
+    onClose()
   }
 
   return (
@@ -143,28 +140,16 @@ function AddForm({ onClose }: { onClose: () => void }) {
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        <div className="relative">
-          <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input
-            ref={symbolRef}
-            value={symbol}
-            onChange={(e) => { setSymbol(e.target.value); setError('') }}
-            onKeyDown={handleKeyDown}
-            placeholder="티커 심볼 (예: AAPL)"
-            className="pl-8 pr-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm outline-none focus:ring-2 focus:ring-indigo-500 w-44"
-          />
-        </div>
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="회사명 (선택)"
-          className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm outline-none focus:ring-2 focus:ring-indigo-500 flex-1 min-w-32"
+      <div className="flex flex-wrap items-center gap-2">
+        <SymbolSearch
+          onSelect={handleSelect}
+          placeholder="종목명 또는 티커 검색 (예: Apple, AAPL)"
+          className="flex-1 min-w-52"
         />
         <button
           onClick={handleAdd}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition-colors"
+          disabled={!selected}
+          className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
         >
           <PlusCircle size={15} />
           추가
