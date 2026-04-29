@@ -60,6 +60,44 @@ app.get('/api/search', async (req, res) => {
   }
 })
 
+// ── RSS 파서 (Google News 전용) ────────────────────────────────────────────
+function parseRssItems(xml) {
+  const items = []
+  const re = /<item>([\s\S]*?)<\/item>/g
+  let m
+  while ((m = re.exec(xml)) !== null) {
+    const block = m[1]
+    const get = (tag) => {
+      const r = new RegExp(`<${tag}[^>]*>(?:<!\\[CDATA\\[)?([\\s\\S]*?)(?:\\]\\]>)?<\\/${tag}>`, 'i')
+      return (r.exec(block)?.[1] ?? '').trim()
+    }
+    const rawTitle = get('title')
+    const title   = rawTitle.replace(/\s+-\s+[^-]+$/, '').trim() // "제목 - 출처" → "제목"
+    const source  = (block.match(/<source[^>]*>([\s\S]*?)<\/source>/i)?.[1] ?? '').trim()
+              || rawTitle.match(/-\s+([^-]+)$/)?.[1]?.trim() || '뉴스'
+    const link    = get('link')
+    const pubDate = get('pubDate')
+    if (title && link) items.push({ title, link, pubDate, source })
+  }
+  return items.slice(0, 30)
+}
+
+// ── GET /api/news-kr?q=삼성전자 주식 ──────────────────────────────────────
+app.get('/api/news-kr', async (req, res) => {
+  const { q = '코스피 코스닥 주식 증시' } = req.query
+  const url = `https://news.google.com/rss/search?q=${encodeURIComponent(q)}&hl=ko&gl=KR&ceid=KR:ko`
+  try {
+    const upstream = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/rss+xml' },
+    })
+    const text = await upstream.text()
+    res.json({ items: parseRssItems(text) })
+  } catch (err) {
+    console.error('[news-kr]', err)
+    res.status(502).json({ error: 'upstream fetch failed' })
+  }
+})
+
 // ── GET /api/news-yf?q=AAPL ───────────────────────────────────────────────
 app.get('/api/news-yf', async (req, res) => {
   const { q } = req.query

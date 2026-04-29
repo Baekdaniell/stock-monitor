@@ -30,6 +30,18 @@ export default defineConfig({
         secure: true,
         rewrite: (path) => path.replace(/^\/api\/news/, ''),
       },
+      '/api/gnews': {
+        target: 'https://news.google.com',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api\/gnews/, ''),
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq) => {
+            proxyReq.setHeader('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36')
+            proxyReq.setHeader('Accept', 'application/rss+xml, application/xml')
+          })
+        },
+      },
     },
   },
 })

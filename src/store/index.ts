@@ -211,17 +211,15 @@ export const useStore = create<StoreState>()(
     }),
     {
       name: 'stock-monitor',
-      version: 2,   // 버전 업 → holdings/watchlist 를 localStorage 에서 제거
+      version: 3,
       migrate: (persisted: unknown, version: number) => {
-        // v0·v1: holdings, watchlist 가 localStorage 에 있었음 → 제거
-        if (version < 2) {
-          const old = persisted as Record<string, unknown>
-          return { alerts: old.alerts ?? [], dark: old.dark ?? false }
-        }
+        const old = persisted as Record<string, unknown>
+        if (version < 2) return { alerts: old.alerts ?? [], dark: old.dark ?? false, holdings: [], watchlist: [] }
+        if (version < 3) return { ...old, holdings: old.holdings ?? [], watchlist: old.watchlist ?? [] }
         return persisted
       },
-      // holdings/watchlist 는 Supabase 가 관리 → localStorage 에서 제외
-      partialize: (s) => ({ alerts: s.alerts, dark: s.dark }),
+      // holdings/watchlist: Supabase 로드 전 캐시용으로 localStorage 에도 보관
+      partialize: (s) => ({ alerts: s.alerts, dark: s.dark, holdings: s.holdings, watchlist: s.watchlist }),
     },
   ),
 )
