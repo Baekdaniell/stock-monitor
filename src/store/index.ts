@@ -110,22 +110,33 @@ export const useStore = create<StoreState>()(
         const { holdings, userId } = get()
         if (holdings.some((h) => h.symbol === holding.symbol)) return
         set({ holdings: [...holdings, holding] })
-        if (userId) upsertHolding(userId, holding).catch(console.error)
+        if (userId) upsertHolding(userId, holding).catch((err) => {
+          console.error('종목 저장 실패:', err)
+          set((s) => ({ holdings: s.holdings.filter((h) => h.symbol !== holding.symbol) }))
+        })
       },
 
       removeHolding: (symbol) => {
-        const { userId } = get()
+        const { userId, holdings } = get()
+        const removed = holdings.find((h) => h.symbol === symbol)
         set((s) => ({ holdings: s.holdings.filter((h) => h.symbol !== symbol) }))
-        if (userId) deleteHolding(userId, symbol).catch(console.error)
+        if (userId) deleteHolding(userId, symbol).catch((err) => {
+          console.error('종목 삭제 실패:', err)
+          if (removed) set((s) => ({ holdings: [...s.holdings, removed] }))
+        })
       },
 
       updateHolding: (symbol, patch) => {
+        const prev = get().holdings.find((h) => h.symbol === symbol)
         set((s) => ({
           holdings: s.holdings.map((h) => (h.symbol === symbol ? { ...h, ...patch } : h)),
         }))
         const { userId, holdings } = get()
         const updated = holdings.find((h) => h.symbol === symbol)
-        if (userId && updated) upsertHolding(userId, updated).catch(console.error)
+        if (userId && updated) upsertHolding(userId, updated).catch((err) => {
+          console.error('종목 수정 실패:', err)
+          if (prev) set((s) => ({ holdings: s.holdings.map((h) => (h.symbol === symbol ? prev : h)) }))
+        })
       },
 
       // ── Watchlist ───────────────────────────────────────────────────────────
@@ -136,13 +147,20 @@ export const useStore = create<StoreState>()(
         const { watchlist, userId } = get()
         if (watchlist.some((w) => w.symbol === item.symbol)) return
         set({ watchlist: [...watchlist, item] })
-        if (userId) upsertWatchItem(userId, item).catch(console.error)
+        if (userId) upsertWatchItem(userId, item).catch((err) => {
+          console.error('관심 종목 저장 실패:', err)
+          set((s) => ({ watchlist: s.watchlist.filter((w) => w.symbol !== item.symbol) }))
+        })
       },
 
       removeFromWatchlist: (symbol) => {
-        const { userId } = get()
+        const { userId, watchlist } = get()
+        const removed = watchlist.find((w) => w.symbol === symbol)
         set((s) => ({ watchlist: s.watchlist.filter((w) => w.symbol !== symbol) }))
-        if (userId) deleteWatchItem(userId, symbol).catch(console.error)
+        if (userId) deleteWatchItem(userId, symbol).catch((err) => {
+          console.error('관심 종목 삭제 실패:', err)
+          if (removed) set((s) => ({ watchlist: [...s.watchlist, removed] }))
+        })
       },
 
       // ── Prices ──────────────────────────────────────────────────────────────
@@ -210,16 +228,17 @@ export const useStore = create<StoreState>()(
       setDark: (dark) => set({ dark }),
     }),
     {
-      name: 'stock-monitor',
-      version: 3,
+      name: 'antark',
+      version: 4,
       migrate: (persisted: unknown, version: number) => {
         const old = persisted as Record<string, unknown>
-        if (version < 2) return { alerts: old.alerts ?? [], dark: old.dark ?? false, holdings: [], watchlist: [] }
-        if (version < 3) return { ...old, holdings: old.holdings ?? [], watchlist: old.watchlist ?? [] }
+        if (version < 2) return { alerts: old.alerts ?? [], dark: old.dark ?? false }
+        if (version < 3) return { alerts: old.alerts ?? [], dark: old.dark ?? false }
+        if (version < 4) return { alerts: old.alerts ?? [], dark: old.dark ?? false }
         return persisted
       },
-      // holdings/watchlist: Supabase 로드 전 캐시용으로 localStorage 에도 보관
-      partialize: (s) => ({ alerts: s.alerts, dark: s.dark, holdings: s.holdings, watchlist: s.watchlist }),
+      // holdings/watchlist는 Supabase가 단일 출처 — 계정 구분 없이 캐시하면 계정 혼동 발생
+      partialize: (s) => ({ alerts: s.alerts, dark: s.dark }),
     },
   ),
 )

@@ -442,7 +442,7 @@ function NotificationSection() {
     const result = await Notification.requestPermission()
     setPermission(result)
     if (result === 'granted') {
-      new Notification('Stock Monitor', {
+      new Notification('Antark', {
         body: '가격 알림이 활성화되었습니다.',
         icon: '/favicon.ico',
       })

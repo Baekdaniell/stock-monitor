@@ -12,6 +12,7 @@ import { Skeleton } from './components/Skeleton'
 import { usePriceService } from './hooks/usePriceService'
 import { useNewsService } from './hooks/useNewsService'
 import { isSupabaseConfigured, supabase } from './lib/supabase'
+import { diagnoseDatabaseConnection } from './lib/db'
 import { useStore } from './store'
 
 // ── 인증 완료 전 전체 화면 로딩 ───────────────────────────────────────────────
@@ -62,41 +63,48 @@ function AppRoutes() {
 // ── App 루트 — Supabase Auth 리스너 ──────────────────────────────────────────
 export default function App() {
   useEffect(() => {
-    const { setUser, setAuthReady, loadUserData } = useStore.getState()
-
     if (!isSupabaseConfigured) {
-      setAuthReady(true)
+      useStore.getState().setAuthReady(true)
       return
     }
 
-    // 최초 세션 확인
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        setUser(session.user.id, session.user.email ?? null)
-        loadUserData(session.user.id)
-          .catch(console.error)
-          .finally(() => setAuthReady(true))
-      } else {
-        setAuthReady(true)
+    diagnoseDatabaseConnection()
+
+    // 직전 로그인 계정 추적 — 토큰 갱신 시 불필요한 clearUserData 방지
+    let currentUserId: string | null = null
+
+    // getSession() 없이 onAuthStateChange 단독 사용 (Supabase v2 권장 패턴)
+    // INITIAL_SESSION: 페이지 로드 시 기존 세션 복원
+    // SIGNED_IN: 신규 로그인 or 토큰 갱신
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      const store = useStore.getState()
+
+      if (event === 'INITIAL_SESSION') {
+        if (session?.user) {
+          currentUserId = session.user.id
+          store.setUser(session.user.id, session.user.email ?? null)
+          store.loadUserData(session.user.id)
+            .catch((err) => console.error('[DB] 포트폴리오 로드 실패:', err))
+            .finally(() => store.setAuthReady(true))
+        } else {
+          store.setAuthReady(true)
+        }
+
+      } else if (event === 'SIGNED_IN' && session?.user) {
+        const isSameUser = currentUserId === session.user.id
+        if (!isSameUser) store.clearUserData()
+        currentUserId = session.user.id
+        store.setUser(session.user.id, session.user.email ?? null)
+        store.loadUserData(session.user.id)
+          .catch((err) => console.error('[DB] 포트폴리오 로드 실패:', err))
+          .finally(() => store.setAuthReady(true))
+
+      } else if (event === 'SIGNED_OUT') {
+        currentUserId = null
+        store.setUser(null, null)
+        store.clearUserData()
       }
     })
-
-    // 이후 auth 상태 변화 감지
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        const { setUser, loadUserData, clearUserData, setAuthReady } = useStore.getState()
-
-        if (event === 'SIGNED_IN' && session?.user) {
-          setUser(session.user.id, session.user.email ?? null)
-          loadUserData(session.user.id)
-            .catch(console.error)
-            .finally(() => setAuthReady(true))
-        } else if (event === 'SIGNED_OUT') {
-          setUser(null, null)
-          clearUserData()
-        }
-      },
-    )
 
     return () => subscription.unsubscribe()
   }, [])

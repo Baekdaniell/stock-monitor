@@ -34,6 +34,19 @@ function toWatchItem(row: WatchRow): WatchItem {
   }
 }
 
+// ── DB 연결 진단 (개발/디버그용) ────────────────────────────────────────────────
+export async function diagnoseDatabaseConnection(): Promise<void> {
+  const { error } = await supabase.from('holdings').select('user_id').limit(1)
+  if (error) {
+    console.error('[DB 진단] holdings 테이블 접근 실패:', error.message, error.hint ?? '')
+    if (error.message.includes('does not exist')) {
+      console.error('[DB 진단] schema.sql을 Supabase SQL 에디터에서 실행하지 않았을 수 있습니다.')
+    }
+  } else {
+    console.info('[DB 진단] Supabase holdings 테이블 연결 정상')
+  }
+}
+
 // ── Holdings ──────────────────────────────────────────────────────────────────
 export async function fetchHoldings(userId: string): Promise<Holding[]> {
   const { data, error } = await supabase

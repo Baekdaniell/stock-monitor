@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
-import { Bell, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
 import { useStore } from '../store'
 
@@ -69,10 +69,25 @@ export default function Login() {
 
         {/* 로고 */}
         <div className="text-center space-y-1">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950 mb-1">
-            <Bell size={24} className="text-indigo-500" />
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-1">
+            <svg width="48" height="48" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="32" height="32" rx="8" fill="#6366f1"/>
+              <line x1="13" y1="8.5" x2="10" y2="4.5" stroke="white" strokeWidth="1.4" strokeLinecap="round"/>
+              <line x1="19" y1="8.5" x2="22" y2="4.5" stroke="white" strokeWidth="1.4" strokeLinecap="round"/>
+              <circle cx="10" cy="4.5" r="1.2" fill="white"/>
+              <circle cx="22" cy="4.5" r="1.2" fill="white"/>
+              <circle cx="16" cy="11" r="3.2" fill="white"/>
+              <ellipse cx="16" cy="16" rx="2.2" ry="2.5" fill="white"/>
+              <ellipse cx="16" cy="22.5" rx="3.6" ry="4.2" fill="white"/>
+              <line x1="13.8" y1="14.2" x2="8" y2="12.5" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
+              <line x1="13.8" y1="16" x2="7.5" y2="16" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
+              <line x1="13.8" y1="17.8" x2="8" y2="20" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
+              <line x1="18.2" y1="14.2" x2="24" y2="12.5" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
+              <line x1="18.2" y1="16" x2="24.5" y2="16" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
+              <line x1="18.2" y1="17.8" x2="24" y2="20" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
+            </svg>
           </div>
-          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">StockMonitor</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Antark</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             {mode === 'login' ? '계정으로 로그인하세요' : '새 계정을 만드세요'}
           </p>

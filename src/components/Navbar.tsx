@@ -4,7 +4,6 @@ import {
   TrendingUp,
   BarChart2,
   BookOpen,
-  Bell,
   List,
   Settings,
   Moon,
@@ -14,6 +13,27 @@ import {
   Clock,
   LogOut,
 } from 'lucide-react'
+
+function AntarkLogo() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="8" fill="#6366f1"/>
+      <line x1="13" y1="8.5" x2="10" y2="4.5" stroke="white" strokeWidth="1.4" strokeLinecap="round"/>
+      <line x1="19" y1="8.5" x2="22" y2="4.5" stroke="white" strokeWidth="1.4" strokeLinecap="round"/>
+      <circle cx="10" cy="4.5" r="1.2" fill="white"/>
+      <circle cx="22" cy="4.5" r="1.2" fill="white"/>
+      <circle cx="16" cy="11" r="3.2" fill="white"/>
+      <ellipse cx="16" cy="16" rx="2.2" ry="2.5" fill="white"/>
+      <ellipse cx="16" cy="22.5" rx="3.6" ry="4.2" fill="white"/>
+      <line x1="13.8" y1="14.2" x2="8" y2="12.5" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
+      <line x1="13.8" y1="16" x2="7.5" y2="16" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
+      <line x1="13.8" y1="17.8" x2="8" y2="20" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
+      <line x1="18.2" y1="14.2" x2="24" y2="12.5" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
+      <line x1="18.2" y1="16" x2="24.5" y2="16" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
+      <line x1="18.2" y1="17.8" x2="24" y2="20" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
+    </svg>
+  )
+}
 import { useDarkMode } from '../hooks/useDarkMode'
 import { useStore } from '../store'
 import { supabase } from '../lib/supabase'
@@ -91,8 +111,8 @@ export default function Navbar() {
             to="/"
             className="flex shrink-0 items-center gap-2 font-bold text-base tracking-tight text-gray-900 dark:text-gray-100"
           >
-            <Bell className="text-indigo-500" size={20} />
-            <span className="hidden xs:block">StockMonitor</span>
+            <AntarkLogo />
+            <span className="hidden xs:block">Antark</span>
           </NavLink>
 
           {/* ── 데스크탑 네비게이션 (md 이상) ── */}
