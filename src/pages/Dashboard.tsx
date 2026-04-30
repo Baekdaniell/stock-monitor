@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { TrendingUp, TrendingDown } from 'lucide-react'
+import { TrendingUp, TrendingDown, Briefcase, Activity, Bell } from 'lucide-react'
 import { useStore } from '../store'
 import PriceChart from '../components/PriceChart'
 import { formatMoney, formatTotal, formatChange } from '../lib/format'
@@ -31,31 +31,38 @@ export default function Dashboard() {
   const displaySymbol = selectedSymbol ?? chartSymbols[0] ?? null
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">대시보드</h1>
+    <div className="space-y-8">
+      {/* ── 페이지 헤더 ── */}
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">대시보드</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">실시간 포트폴리오 & 시장 현황</p>
+      </div>
 
       {/* ── 요약 카드 ── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <SummaryCard
           label="포트폴리오 가치"
           value={formatTotal(holdings.map((h) => h.symbol), totalValue)}
+          icon={Briefcase}
         />
         <SummaryCard
           label="총 손익"
           value={`${totalPnl >= 0 ? '+' : '-'}${formatTotal(holdings.map((h) => h.symbol), Math.abs(totalPnl))}`}
           sub={`${totalPnlPct >= 0 ? '+' : ''}${totalPnlPct.toFixed(1)}%`}
           positive={totalPnl >= 0}
+          icon={Activity}
         />
         <SummaryCard
           label="활성 알림"
           value={String(alerts.filter((a) => !a.triggered).length)}
+          icon={Bell}
         />
       </div>
 
       {/* ── 차트 섹션 ── */}
       <section className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">가격 차트</h2>
+          <SectionTitle>가격 차트</SectionTitle>
 
           {/* 심볼 셀렉터 */}
           {chartSymbols.length > 0 && (
@@ -90,8 +97,11 @@ export default function Dashboard() {
         {displaySymbol ? (
           <PriceChart symbol={displaySymbol} />
         ) : (
-          <div className="flex items-center justify-center h-48 rounded-xl border border-dashed border-gray-200 dark:border-gray-800">
-            <p className="text-sm text-gray-400">
+          <div className="flex flex-col items-center justify-center h-48 rounded-xl border border-dashed border-gray-200 dark:border-gray-800 gap-3">
+            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800">
+              <TrendingUp size={18} className="text-gray-400 dark:text-gray-500" />
+            </div>
+            <p className="text-sm text-gray-400 dark:text-gray-500">
               포트폴리오 또는 관심종목에 종목을 추가하면 차트가 표시됩니다.
             </p>
           </div>
@@ -100,7 +110,7 @@ export default function Dashboard() {
 
       {/* ── 보유 종목 테이블 ── */}
       <section>
-        <h2 className="text-lg font-semibold mb-3">보유 종목</h2>
+        <SectionTitle className="mb-3">보유 종목</SectionTitle>
         {holdings.length === 0 ? (
           <p className="text-gray-500 dark:text-gray-400 text-sm">
             보유 종목이 없습니다. 포트폴리오에서 추가해보세요.
@@ -153,23 +163,39 @@ export default function Dashboard() {
   )
 }
 
+// ── SectionTitle ──────────────────────────────────────────────────────────────
+function SectionTitle({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`flex items-center gap-2.5 ${className}`}>
+      <div className="w-1 h-5 rounded-full bg-red-600 shrink-0" />
+      <h2 className="text-lg font-semibold">{children}</h2>
+    </div>
+  )
+}
+
 // ── SummaryCard ────────────────────────────────────────────────────────────────
 function SummaryCard({
   label,
   value,
   sub,
   positive,
+  icon: Icon,
 }: {
   label: string
   value: string
   sub?: string
   positive?: boolean
+  icon?: React.ElementType
 }) {
   return (
-    <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-4">
-      <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">{label}</p>
+    <div className="relative rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 overflow-hidden">
+      <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-red-500/60 to-transparent" />
+      <div className="flex items-start justify-between mb-3">
+        <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{label}</p>
+        {Icon && <Icon size={16} className="text-gray-300 dark:text-gray-700" />}
+      </div>
       <p className={[
-        'text-xl font-bold',
+        'text-2xl font-bold tracking-tight',
         positive === undefined
           ? 'text-gray-900 dark:text-gray-100'
           : positive
@@ -178,7 +204,14 @@ function SummaryCard({
       ].join(' ')}>
         {value}
       </p>
-      {sub && <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{sub}</p>}
+      {sub && <p className={[
+        'text-xs font-medium mt-1.5',
+        positive === undefined
+          ? 'text-gray-400 dark:text-gray-500'
+          : positive
+            ? 'text-emerald-500'
+            : 'text-red-400',
+      ].join(' ')}>{sub}</p>}
     </div>
   )
 }

@@ -72,7 +72,10 @@ export default function News() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">뉴스 · 이슈</h1>
+      <div>
+      <h1 className="text-2xl font-bold tracking-tight">뉴스 · 이슈</h1>
+      <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">보유 및 관심 종목 최신 뉴스</p>
+    </div>
 
       {/* 필터 바 */}
       <div className="flex flex-wrap gap-2 pb-3 border-b border-gray-100 dark:border-gray-800">

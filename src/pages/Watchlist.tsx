@@ -173,7 +173,10 @@ export default function Watchlist() {
       {/* 헤더 */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">관심종목</h1>
+          <div>
+          <h1 className="text-2xl font-bold tracking-tight">관심종목</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">실시간 시세 모니터링 및 알림</p>
+        </div>
           {watchlist.length > 0 && (
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
               {watchlist.length}개 종목

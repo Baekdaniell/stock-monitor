@@ -17,18 +17,16 @@ import {
 function AntarkLogo() {
   return (
     <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="32" height="32" rx="8" fill="#111111"/>
-      <line x1="12.5" y1="9" x2="9" y2="3.5" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round"/>
-      <circle cx="8.5" cy="3" r="1.5" fill="#ef4444"/>
-      <line x1="19.5" y1="9" x2="23" y2="3.5" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round"/>
-      <circle cx="23.5" cy="3" r="1.5" fill="#ef4444"/>
-      <ellipse cx="16" cy="16" rx="11" ry="10" fill="#dc2626"/>
-      <ellipse cx="11" cy="14" rx="3" ry="3.2" fill="#111111"/>
-      <circle cx="12" cy="12.8" r="1.1" fill="white"/>
-      <ellipse cx="21" cy="14" rx="3" ry="3.2" fill="#111111"/>
-      <circle cx="22" cy="12.8" r="1.1" fill="white"/>
-      <path d="M10 25 Q7.5 29 10.5 31" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" fill="none"/>
-      <path d="M22 25 Q24.5 29 21.5 31" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <rect width="32" height="32" rx="5" fill="#0a0a0a"/>
+      <polygon points="9.5,10 13.5,10 11.5,2" fill="#dc2626"/>
+      <polygon points="18.5,10 22.5,10 20.5,2" fill="#dc2626"/>
+      <polygon points="7,10 25,10 23,30 9,30" fill="#dc2626"/>
+      <polygon points="7,10 25,10 24,15 8,15" fill="#7f1d1d"/>
+      <polygon points="9,16 14,16 13,25 8.5,25" fill="#0a0a0a"/>
+      <polygon points="9.5,17 13.5,17 12.5,24 9,24" fill="#ff3333"/>
+      <polygon points="18,16 23,16 23.5,25 18.5,25" fill="#0a0a0a"/>
+      <polygon points="18.5,17 22.5,17 23,24 19,24" fill="#ff3333"/>
+      <polygon points="11,27 21,27 20.5,30 11.5,30" fill="#991b1b"/>
     </svg>
   )
 }
@@ -101,7 +99,8 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full border-b border-gray-200 dark:border-gray-800 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md">
+      <header className="sticky top-0 z-40 w-full bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200/80 dark:border-gray-800/80">
+        <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-red-600/50 to-transparent pointer-events-none" />
         <div className="mx-auto flex h-14 max-w-screen-xl items-center gap-4 px-4 md:px-6">
 
           {/* ── 로고 ── */}
@@ -110,7 +109,7 @@ export default function Navbar() {
             className="flex shrink-0 items-center gap-2 font-bold text-xl tracking-tight text-gray-900 dark:text-gray-100"
           >
             <AntarkLogo />
-            <span>Antark</span>
+            <span className="font-black tracking-widest">ANTARK</span>
           </NavLink>
 
           {/* ── 데스크탑 네비게이션 (md 이상) ── */}

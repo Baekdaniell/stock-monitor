@@ -31,9 +31,10 @@ const BTN_ICON =
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="space-y-4">
-      <h2 className="text-base font-semibold text-gray-700 dark:text-gray-300 pb-2 border-b border-gray-100 dark:border-gray-800">
-        {title}
-      </h2>
+      <div className="flex items-center gap-2.5 pb-3 border-b border-gray-100 dark:border-gray-800">
+        <div className="w-1 h-4 rounded-full bg-red-600 shrink-0" />
+        <h2 className="text-base font-semibold text-gray-800 dark:text-gray-200">{title}</h2>
+      </div>
       {children}
     </section>
   )
@@ -610,7 +611,10 @@ function ThemeSection() {
 export default function Settings() {
   return (
     <div className="space-y-10 max-w-4xl">
-      <h1 className="text-2xl font-bold">설정</h1>
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">설정</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">종목 관리, 알림, 테마를 설정하세요</p>
+      </div>
       <HoldingsSection />
       <WatchlistSection />
       <NotificationSection />

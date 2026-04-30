@@ -39,7 +39,10 @@ export default function Portfolio() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">포트폴리오</h1>
+        <div>
+        <h1 className="text-2xl font-bold tracking-tight">포트폴리오</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">보유 종목 현황 및 수익률</p>
+      </div>
         <button
           onClick={() => setShowForm((v) => !v)}
           className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors"

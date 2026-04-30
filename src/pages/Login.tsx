@@ -69,23 +69,21 @@ export default function Login() {
 
         {/* 로고 */}
         <div className="text-center space-y-1">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-1">
-            <svg width="56" height="56" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="32" height="32" rx="8" fill="#111111"/>
-              <line x1="12.5" y1="9" x2="9" y2="3.5" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round"/>
-              <circle cx="8.5" cy="3" r="1.5" fill="#ef4444"/>
-              <line x1="19.5" y1="9" x2="23" y2="3.5" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round"/>
-              <circle cx="23.5" cy="3" r="1.5" fill="#ef4444"/>
-              <ellipse cx="16" cy="16" rx="11" ry="10" fill="#dc2626"/>
-              <ellipse cx="11" cy="14" rx="3" ry="3.2" fill="#111111"/>
-              <circle cx="12" cy="12.8" r="1.1" fill="white"/>
-              <ellipse cx="21" cy="14" rx="3" ry="3.2" fill="#111111"/>
-              <circle cx="22" cy="12.8" r="1.1" fill="white"/>
-              <path d="M10 25 Q7.5 29 10.5 31" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" fill="none"/>
-              <path d="M22 25 Q24.5 29 21.5 31" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" fill="none"/>
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-2">
+            <svg width="64" height="64" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="32" height="32" rx="5" fill="#0a0a0a"/>
+              <polygon points="9.5,10 13.5,10 11.5,2" fill="#dc2626"/>
+              <polygon points="18.5,10 22.5,10 20.5,2" fill="#dc2626"/>
+              <polygon points="7,10 25,10 23,30 9,30" fill="#dc2626"/>
+              <polygon points="7,10 25,10 24,15 8,15" fill="#7f1d1d"/>
+              <polygon points="9,16 14,16 13,25 8.5,25" fill="#0a0a0a"/>
+              <polygon points="9.5,17 13.5,17 12.5,24 9,24" fill="#ff3333"/>
+              <polygon points="18,16 23,16 23.5,25 18.5,25" fill="#0a0a0a"/>
+              <polygon points="18.5,17 22.5,17 23,24 19,24" fill="#ff3333"/>
+              <polygon points="11,27 21,27 20.5,30 11.5,30" fill="#991b1b"/>
             </svg>
           </div>
-          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Antark</h1>
+          <h1 className="text-2xl font-black tracking-widest text-gray-900 dark:text-gray-100">ANTARK</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             {mode === 'login' ? '계정으로 로그인하세요' : '새 계정을 만드세요'}
           </p>
