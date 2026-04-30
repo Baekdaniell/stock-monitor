@@ -72,15 +72,17 @@ export default function Login() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-2">
             <svg width="64" height="64" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="32" height="32" rx="5" fill="#0a0a0a"/>
-              <polygon points="9.5,10 13.5,10 11.5,2" fill="#dc2626"/>
-              <polygon points="18.5,10 22.5,10 20.5,2" fill="#dc2626"/>
-              <polygon points="7,10 25,10 23,30 9,30" fill="#dc2626"/>
-              <polygon points="7,10 25,10 24,15 8,15" fill="#7f1d1d"/>
-              <polygon points="9,16 14,16 13,25 8.5,25" fill="#0a0a0a"/>
-              <polygon points="9.5,17 13.5,17 12.5,24 9,24" fill="#ff3333"/>
-              <polygon points="18,16 23,16 23.5,25 18.5,25" fill="#0a0a0a"/>
-              <polygon points="18.5,17 22.5,17 23,24 19,24" fill="#ff3333"/>
-              <polygon points="11,27 21,27 20.5,30 11.5,30" fill="#991b1b"/>
+              <line x1="2" y1="26" x2="30" y2="26" stroke="white" strokeWidth="0.5" strokeOpacity="0.06"/>
+              <line x1="2" y1="20" x2="30" y2="20" stroke="white" strokeWidth="0.5" strokeOpacity="0.04"/>
+              <polyline points="3,23 7,23 10,19 13,24 17,15 20,10 23,21 26,18 30,19"
+                stroke="#ef4444" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.18" fill="none"/>
+              <line x1="20" y1="10" x2="17" y2="4" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round"/>
+              <circle cx="16.5" cy="3" r="1.5" fill="#ef4444"/>
+              <line x1="20" y1="10" x2="23" y2="4" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round"/>
+              <circle cx="23.5" cy="3" r="1.5" fill="#ef4444"/>
+              <polyline points="3,23 7,23 10,19 13,24 17,15 20,10 23,21 26,18 30,19"
+                stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+              <circle cx="20" cy="10" r="2" fill="#ef4444"/>
             </svg>
           </div>
           <h1 className="text-2xl font-black tracking-widest text-gray-900 dark:text-gray-100">ANTARK</h1>
