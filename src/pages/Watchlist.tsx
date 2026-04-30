@@ -133,9 +133,9 @@ function AddForm({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div className="rounded-2xl border border-indigo-200 dark:border-indigo-900 bg-indigo-50 dark:bg-indigo-950/30 p-4">
+    <div className="rounded-2xl border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/30 p-4">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-sm font-semibold text-indigo-700 dark:text-indigo-300">관심종목 추가</span>
+        <span className="text-sm font-semibold text-red-700 dark:text-red-300">관심종목 추가</span>
         <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
           <X size={16} />
         </button>
@@ -150,7 +150,7 @@ function AddForm({ onClose }: { onClose: () => void }) {
         <button
           onClick={handleAdd}
           disabled={!selected}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
         >
           <PlusCircle size={15} />
           추가
@@ -183,7 +183,7 @@ export default function Watchlist() {
         {!showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition-colors"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors"
           >
             <PlusCircle size={16} />
             종목 추가
@@ -206,7 +206,7 @@ export default function Watchlist() {
           </p>
           <button
             onClick={() => setShowForm(true)}
-            className="mt-4 flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition-colors"
+            className="mt-4 flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors"
           >
             <PlusCircle size={15} />
             첫 종목 추가하기

@@ -10,12 +10,12 @@ import type { AlertType, Holding } from '../store/types'
 // ── 공통 스타일 ──────────────────────────────────────────────────────────────
 const INPUT =
   'rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 ' +
-  'px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500 ' +
+  'px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-red-500 ' +
   'dark:text-gray-100 placeholder:text-gray-400'
 
 const BTN_PRIMARY =
-  'inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-indigo-600 ' +
-  'hover:bg-indigo-700 text-white text-sm font-medium transition-colors'
+  'inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-red-600 ' +
+  'hover:bg-red-700 text-white text-sm font-medium transition-colors'
 
 const BTN_SECONDARY =
   'inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border ' +
@@ -297,7 +297,7 @@ function WatchlistSection() {
                     <span className="font-mono font-semibold text-sm">{item.symbol}</span>
                     <span className="text-sm text-gray-500 dark:text-gray-400 truncate">{item.name}</span>
                     {itemAlerts.length > 0 && (
-                      <span className="shrink-0 text-xs text-indigo-500 dark:text-indigo-400">
+                      <span className="shrink-0 text-xs text-red-500 dark:text-red-400">
                         알림 {itemAlerts.length}개
                       </span>
                     )}
@@ -306,7 +306,7 @@ function WatchlistSection() {
                     <button
                       onClick={() => toggleAlertForm(item.symbol)}
                       title="알림 설정"
-                      className={`${BTN_ICON} ${isAlertOpen ? 'text-indigo-500 bg-indigo-50 dark:bg-indigo-950/40' : ''}`}
+                      className={`${BTN_ICON} ${isAlertOpen ? 'text-red-500 bg-red-50 dark:bg-red-950/40' : ''}`}
                     >
                       <Bell size={14} />
                     </button>
@@ -322,8 +322,8 @@ function WatchlistSection() {
 
                 {/* 인라인 알림 폼 */}
                 {isAlertOpen && (
-                  <div className="rounded-xl border border-indigo-200 dark:border-indigo-900 bg-indigo-50 dark:bg-indigo-950/30 px-4 py-3 space-y-2.5">
-                    <p className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                  <div className="rounded-xl border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/30 px-4 py-3 space-y-2.5">
+                    <p className="text-xs font-semibold text-red-600 dark:text-red-400">
                       {item.symbol} 가격 알림
                     </p>
 
@@ -333,7 +333,7 @@ function WatchlistSection() {
                         {itemAlerts.map((a) => (
                           <li
                             key={a.id}
-                            className="flex items-center justify-between text-xs text-indigo-700 dark:text-indigo-300"
+                            className="flex items-center justify-between text-xs text-red-700 dark:text-red-300"
                           >
                             <span>
                               ${a.targetPrice.toLocaleString()} {a.type === 'above' ? '이상' : '이하'}
@@ -507,7 +507,7 @@ function ApiKeySection() {
             href="https://newsapi.org/register"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-indigo-500 hover:underline"
+            className="text-red-500 hover:underline"
           >
             newsapi.org 에서 무료 발급
           </a>

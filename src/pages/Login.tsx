@@ -8,7 +8,7 @@ type Mode = 'login' | 'signup'
 
 const INPUT =
   'w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 ' +
-  'px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500 ' +
+  'px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-red-500 ' +
   'dark:text-gray-100 placeholder:text-gray-400'
 
 export default function Login() {
@@ -69,22 +69,20 @@ export default function Login() {
 
         {/* 로고 */}
         <div className="text-center space-y-1">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-1">
-            <svg width="48" height="48" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="32" height="32" rx="8" fill="#6366f1"/>
-              <line x1="13" y1="8.5" x2="10" y2="4.5" stroke="white" strokeWidth="1.4" strokeLinecap="round"/>
-              <line x1="19" y1="8.5" x2="22" y2="4.5" stroke="white" strokeWidth="1.4" strokeLinecap="round"/>
-              <circle cx="10" cy="4.5" r="1.2" fill="white"/>
-              <circle cx="22" cy="4.5" r="1.2" fill="white"/>
-              <circle cx="16" cy="11" r="3.2" fill="white"/>
-              <ellipse cx="16" cy="16" rx="2.2" ry="2.5" fill="white"/>
-              <ellipse cx="16" cy="22.5" rx="3.6" ry="4.2" fill="white"/>
-              <line x1="13.8" y1="14.2" x2="8" y2="12.5" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
-              <line x1="13.8" y1="16" x2="7.5" y2="16" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
-              <line x1="13.8" y1="17.8" x2="8" y2="20" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
-              <line x1="18.2" y1="14.2" x2="24" y2="12.5" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
-              <line x1="18.2" y1="16" x2="24.5" y2="16" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
-              <line x1="18.2" y1="17.8" x2="24" y2="20" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-1">
+            <svg width="56" height="56" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="32" height="32" rx="8" fill="#111111"/>
+              <line x1="12.5" y1="9" x2="9" y2="3.5" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round"/>
+              <circle cx="8.5" cy="3" r="1.5" fill="#ef4444"/>
+              <line x1="19.5" y1="9" x2="23" y2="3.5" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round"/>
+              <circle cx="23.5" cy="3" r="1.5" fill="#ef4444"/>
+              <ellipse cx="16" cy="16" rx="11" ry="10" fill="#dc2626"/>
+              <ellipse cx="11" cy="14" rx="3" ry="3.2" fill="#111111"/>
+              <circle cx="12" cy="12.8" r="1.1" fill="white"/>
+              <ellipse cx="21" cy="14" rx="3" ry="3.2" fill="#111111"/>
+              <circle cx="22" cy="12.8" r="1.1" fill="white"/>
+              <path d="M10 25 Q7.5 29 10.5 31" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" fill="none"/>
+              <path d="M22 25 Q24.5 29 21.5 31" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" fill="none"/>
             </svg>
           </div>
           <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Antark</h1>
@@ -146,7 +144,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading || !isSupabaseConfigured}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold transition-colors"
           >
             {loading && <Loader2 size={15} className="animate-spin" />}
             {mode === 'login' ? '로그인' : '회원가입'}
@@ -159,7 +157,7 @@ export default function Login() {
           <button
             type="button"
             onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError(null); setInfo(null) }}
-            className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline"
+            className="text-red-600 dark:text-red-400 font-medium hover:underline"
           >
             {mode === 'login' ? '회원가입' : '로그인'}
           </button>

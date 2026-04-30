@@ -42,7 +42,7 @@ export default function NewsCard({ article }: NewsCardProps) {
     >
       <div className="min-w-0 flex-1 space-y-2">
         {/* 제목 */}
-        <p className="font-medium leading-snug group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
+        <p className="font-medium leading-snug group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2">
           {article.title}
         </p>
 
@@ -69,7 +69,7 @@ export default function NewsCard({ article }: NewsCardProps) {
           {article.relatedSymbols.map((sym) => (
             <span
               key={sym}
-              className="px-1.5 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 font-mono text-xs"
+              className="px-1.5 py-0.5 rounded bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400 font-mono text-xs"
             >
               {sym}
             </span>
@@ -79,7 +79,7 @@ export default function NewsCard({ article }: NewsCardProps) {
 
       <ExternalLink
         size={15}
-        className="shrink-0 mt-1 text-gray-400 group-hover:text-indigo-400 transition-colors"
+        className="shrink-0 mt-1 text-gray-400 group-hover:text-red-400 transition-colors"
       />
     </a>
   )

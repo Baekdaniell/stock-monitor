@@ -70,13 +70,13 @@ export default function Dashboard() {
                     className={[
                       'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors',
                       displaySymbol === sym
-                        ? 'bg-indigo-600 border-indigo-600 text-white'
-                        : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-indigo-300 dark:hover:border-indigo-700',
+                        ? 'bg-red-600 border-red-600 text-white'
+                        : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-red-300 dark:hover:border-red-700',
                     ].join(' ')}
                   >
                     {sym}
                     {p && (
-                      <span className={displaySymbol === sym ? 'text-indigo-200' : isUp ? 'text-emerald-500' : 'text-red-500'}>
+                      <span className={displaySymbol === sym ? 'text-red-200' : isUp ? 'text-emerald-500' : 'text-red-500'}>
                         {isUp ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
                       </span>
                     )}

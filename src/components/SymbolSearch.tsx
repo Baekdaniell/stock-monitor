@@ -249,8 +249,8 @@ export default function SymbolSearch({ onSelect, placeholder = '종목 검색 (A
   return (
     <div ref={containerRef} className={`relative ${className ?? ''}`}>
       {selected ? (
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-indigo-400 dark:border-indigo-600 bg-indigo-50 dark:bg-indigo-950/40 text-sm">
-          <span className="font-semibold text-indigo-700 dark:text-indigo-300">{selected.symbol}</span>
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-red-400 dark:border-red-600 bg-red-50 dark:bg-red-950/40 text-sm">
+          <span className="font-semibold text-red-700 dark:text-red-300">{selected.symbol}</span>
           <span className="text-gray-500 dark:text-gray-400 truncate flex-1">{selected.name}</span>
           <button
             type="button"
@@ -271,7 +271,7 @@ export default function SymbolSearch({ onSelect, placeholder = '종목 검색 (A
             onKeyDown={handleKeyDown}
             onFocus={() => results.length > 0 && setOpen(true)}
             placeholder={placeholder}
-            className="pl-8 pr-8 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+            className="pl-8 pr-8 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm outline-none focus:ring-2 focus:ring-red-500 w-full"
           />
           {loading && (
             <Loader2 size={14} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 animate-spin" />
@@ -289,7 +289,7 @@ export default function SymbolSearch({ onSelect, placeholder = '종목 검색 (A
               className={[
                 'flex items-center gap-3 px-3 py-2.5 cursor-pointer text-sm transition-colors',
                 i === activeIndex
-                  ? 'bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300'
+                  ? 'bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300'
                   : 'hover:bg-gray-50 dark:hover:bg-gray-800',
               ].join(' ')}
             >

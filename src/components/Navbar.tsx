@@ -16,21 +16,19 @@ import {
 
 function AntarkLogo() {
   return (
-    <svg width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="32" height="32" rx="8" fill="#6366f1"/>
-      <line x1="13" y1="8.5" x2="10" y2="4.5" stroke="white" strokeWidth="1.4" strokeLinecap="round"/>
-      <line x1="19" y1="8.5" x2="22" y2="4.5" stroke="white" strokeWidth="1.4" strokeLinecap="round"/>
-      <circle cx="10" cy="4.5" r="1.2" fill="white"/>
-      <circle cx="22" cy="4.5" r="1.2" fill="white"/>
-      <circle cx="16" cy="11" r="3.2" fill="white"/>
-      <ellipse cx="16" cy="16" rx="2.2" ry="2.5" fill="white"/>
-      <ellipse cx="16" cy="22.5" rx="3.6" ry="4.2" fill="white"/>
-      <line x1="13.8" y1="14.2" x2="8" y2="12.5" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
-      <line x1="13.8" y1="16" x2="7.5" y2="16" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
-      <line x1="13.8" y1="17.8" x2="8" y2="20" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
-      <line x1="18.2" y1="14.2" x2="24" y2="12.5" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
-      <line x1="18.2" y1="16" x2="24.5" y2="16" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
-      <line x1="18.2" y1="17.8" x2="24" y2="20" stroke="white" strokeWidth="1.1" strokeLinecap="round"/>
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="8" fill="#111111"/>
+      <line x1="12.5" y1="9" x2="9" y2="3.5" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round"/>
+      <circle cx="8.5" cy="3" r="1.5" fill="#ef4444"/>
+      <line x1="19.5" y1="9" x2="23" y2="3.5" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round"/>
+      <circle cx="23.5" cy="3" r="1.5" fill="#ef4444"/>
+      <ellipse cx="16" cy="16" rx="11" ry="10" fill="#dc2626"/>
+      <ellipse cx="11" cy="14" rx="3" ry="3.2" fill="#111111"/>
+      <circle cx="12" cy="12.8" r="1.1" fill="white"/>
+      <ellipse cx="21" cy="14" rx="3" ry="3.2" fill="#111111"/>
+      <circle cx="22" cy="12.8" r="1.1" fill="white"/>
+      <path d="M10 25 Q7.5 29 10.5 31" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" fill="none"/>
+      <path d="M22 25 Q24.5 29 21.5 31" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" fill="none"/>
     </svg>
   )
 }
@@ -64,7 +62,7 @@ function navLinkClass(isActive: boolean, mobile = false) {
   return [
     base,
     isActive
-      ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-400'
+      ? 'bg-red-50 text-red-600 dark:bg-red-950 dark:text-red-400'
       : mobile
         ? 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
         : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800',
@@ -109,10 +107,10 @@ export default function Navbar() {
           {/* ── 로고 ── */}
           <NavLink
             to="/"
-            className="flex shrink-0 items-center gap-2 font-bold text-base tracking-tight text-gray-900 dark:text-gray-100"
+            className="flex shrink-0 items-center gap-2 font-bold text-xl tracking-tight text-gray-900 dark:text-gray-100"
           >
             <AntarkLogo />
-            <span className="hidden xs:block">Antark</span>
+            <span>Antark</span>
           </NavLink>
 
           {/* ── 데스크탑 네비게이션 (md 이상) ── */}

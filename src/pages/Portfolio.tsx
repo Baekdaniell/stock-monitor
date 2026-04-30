@@ -42,7 +42,7 @@ export default function Portfolio() {
         <h1 className="text-2xl font-bold">포트폴리오</h1>
         <button
           onClick={() => setShowForm((v) => !v)}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition-colors"
+          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors"
         >
           <PlusCircle size={16} />
           종목 추가
@@ -67,7 +67,7 @@ export default function Portfolio() {
                 placeholder="10"
                 value={form.shares === 0 ? '' : form.shares}
                 onChange={(e) => setForm((f) => ({ ...f, shares: Number(e.target.value) }))}
-                className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-red-500"
               />
             </label>
             <label className="flex flex-col gap-1">
@@ -77,7 +77,7 @@ export default function Portfolio() {
                 placeholder={avgCostPlaceholder}
                 value={form.avgCost === 0 ? '' : form.avgCost}
                 onChange={(e) => setForm((f) => ({ ...f, avgCost: Number(e.target.value) }))}
-                className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-red-500"
               />
             </label>
           </div>
@@ -87,7 +87,7 @@ export default function Portfolio() {
             <button
               onClick={handleAdd}
               disabled={!form.symbol || form.shares <= 0 || form.avgCost <= 0}
-              className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
+              className="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
             >
               추가
             </button>
